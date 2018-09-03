@@ -1,8 +1,5 @@
 package net.slipp.web;
 
-/**
- * User DTO 
- * */
 public class User {
 	private String userId;
 	private String password;
