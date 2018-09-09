@@ -1,8 +1,11 @@
 package net.slipp.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +28,34 @@ public class UserController {
 		return "/index";
 	}
 	
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "/user/login";
+	}
+
+	@PostMapping("/login")
+	public String login(String userId, String password,HttpSession session) {
+		//userId에 해당하는 회원이 데이터베이스에 존재해야한다
+		User user = userRepository.findByUserId(userId);
+		if(user == null) {
+			System.out.println("로그인실패");
+			return "redirect:/users/loginForm";
+		}
+		if (!password.equals(user.getPassword())) {
+			System.out.println("로그인실패");
+			return "redirect:/users/loginForm";
+		}
+		
+		System.out.println("로그인성공");
+		session.setAttribute("user", user);
+		
+		
+		return "redirect:/";
+	}
+	
 	@GetMapping("/form")
 	public String form() {
-		return "/form";
+		return "/user/form";
 	}
 	
 	@PostMapping("")
